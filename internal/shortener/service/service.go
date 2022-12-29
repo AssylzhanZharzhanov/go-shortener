@@ -20,6 +20,24 @@ func NewShortenerService(repository domain.ShortenerRepository, redisRepository 
 }
 
 func (s *service) CreateShortenURL(ctx context.Context, link *domain.Link) (*domain.Link, error) {
+
+	var (
+		shortUrl = Shorten(link.OriginalURL)
+	)
+
+	for i := 0; i < len(shortUrl)-7; i++ {
+		isExist, err := s.repository.IsExist(shortUrl)
+		if err != nil {
+			return nil, err
+		}
+		if isExist {
+			continue
+		} else {
+			break
+		}
+	}
+
+	link.Hash = shortUrl
 	return s.repository.Create(link)
 }
 
