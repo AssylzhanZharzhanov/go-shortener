@@ -1,0 +1,85 @@
+basePath: /
+definitions:
+  domain.CreateShortenURLDTO:
+    properties:
+      original_url:
+        type: string
+    type: object
+  helpers.Response:
+    properties:
+      body:
+        properties:
+          data: {}
+          status:
+            type: string
+        type: object
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Documentation for Mercury APIs.
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Mercury
+  version: "1.0"
+paths:
+  /api/shorten:
+    post:
+      consumes:
+      - application/json
+      description: create shorten url
+      operationId: create-shorten-url
+      parameters:
+      - description: news body
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateShortenURLDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Create shorten url
+      tags:
+      - news
+  /api/shorten/{shorten_url}:
+    get:
+      consumes:
+      - application/json
+      description: Get news by id
+      operationId: get-news-by-id
+      parameters:
+      - description: shorten url
+        in: path
+        name: shorten_url
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Get news by id
+      tags:
+      - news
+schemes:
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

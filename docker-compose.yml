@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  app:
+    image: golang:1.17-alpine
+    working_dir: /app
+    command: go run cmd/main.go
+    env_file:
+      - config/config.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+      - redis
+
+  migrations:
+    image: registry.gitlab.com/zharzhanov/postgresql.data-migration:latest
+    environment:
+      - DSN=user=user password=password host=postgres port=5432 dbname=postgres sslmode=disable
+    volumes:
+      - ./migrations/postgresql:/migrations
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres:13.4
+    restart: always
+    volumes:
+      - postgres_storage:/var/lib/postgresql/data:z
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - redis_storage:/data
+
+volumes:
+  postgres_storage:
+    driver: local
+  redis_storage:
+    driver: local
