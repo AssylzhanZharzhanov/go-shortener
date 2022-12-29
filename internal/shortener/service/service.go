@@ -6,6 +6,10 @@ import (
 	"github.com/AssylzhanZharzhanov/go-shortener/internal/shortener/domain"
 )
 
+const (
+	cacheDuration = 3600
+)
+
 type service struct {
 	repository      domain.ShortenerRepository
 	redisRepository domain.ShortenerRedisRepository
@@ -26,13 +30,15 @@ func (s *service) CreateShortenURL(ctx context.Context, link *domain.Link) (*dom
 	)
 
 	for i := 0; i < len(shortUrl)-7; i++ {
-		isExist, err := s.repository.IsExist(shortUrl)
+		url := shortUrl[i : i+7]
+		isExist, err := s.repository.IsExist(url)
 		if err != nil {
 			return nil, err
 		}
 		if isExist {
 			continue
 		} else {
+			shortUrl = url
 			break
 		}
 	}
@@ -42,5 +48,22 @@ func (s *service) CreateShortenURL(ctx context.Context, link *domain.Link) (*dom
 }
 
 func (s *service) Get(ctx context.Context, shortenURL string) (*domain.Link, error) {
-	return s.repository.Get(shortenURL)
+	cached, err := s.redisRepository.Get(ctx, shortenURL)
+	if err != nil {
+		return nil, err
+	}
+	if cached != nil {
+		return cached, nil
+	}
+
+	response, err := s.repository.Get(shortenURL)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.redisRepository.Set(ctx, shortenURL, response, cacheDuration)
+	if err != nil {
+		return nil, err
+	}
+	return response, nil
 }
