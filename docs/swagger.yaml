@@ -53,8 +53,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get news by id
-      operationId: get-news-by-id
+      description: Get url by id
+      operationId: get-url-by-id
       parameters:
       - description: shorten url
         in: path
@@ -72,7 +72,7 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/helpers.Response'
-      summary: Get news by id
+      summary: Get url by id
       tags:
       - news
 schemes:
