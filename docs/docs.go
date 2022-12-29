@@ -60,7 +60,7 @@ const docTemplate = `{
         },
         "/api/shorten/{shorten_url}": {
             "get": {
-                "description": "Get news by id",
+                "description": "Get url by id",
                 "consumes": [
                     "application/json"
                 ],
@@ -70,8 +70,8 @@ const docTemplate = `{
                 "tags": [
                     "news"
                 ],
-                "summary": "Get news by id",
-                "operationId": "get-news-by-id",
+                "summary": "Get url by id",
+                "operationId": "get-url-by-id",
                 "parameters": [
                     {
                         "type": "string",
