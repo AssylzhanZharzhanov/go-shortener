@@ -6,6 +6,7 @@ import "context"
 type ShortenerRepository interface {
 	Create(link *Link) (*Link, error)
 	Get(shortenURL string) (*Link, error)
+	IsExist(shortenURL string) (bool, error)
 }
 
 // ShortenerRedisRepository - provides access to a redis storage
