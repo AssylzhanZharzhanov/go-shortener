@@ -26,13 +26,26 @@ func (r *repository) Create(link *domain.Link) (*domain.Link, error) {
 }
 
 func (r *repository) Get(shortenURL string) (*domain.Link, error) {
-	var (
-		link *domain.Link
-	)
+	var link *domain.Link
+
 	err := r.db.Where("hash = ?", shortenURL).First(&link).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return link, nil
+}
+
+func (r *repository) IsExist(shortenURL string) (bool, error) {
+	var isExist bool
+
+	err := r.db.Model(&domain.Link{}).
+		Select("count(*) > 0").
+		Where("hash = ?", shortenURL).
+		Find(&isExist).Error
+	if err != nil {
+		return false, err
+	}
+
+	return isExist, nil
 }

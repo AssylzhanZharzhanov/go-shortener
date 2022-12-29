@@ -65,7 +65,7 @@ func (mr *MockShortenerRedisRepositoryMockRecorder) Get(arg0, arg1 interface{}) 
 }
 
 // Set mocks base method.
-func (m *MockShortenerRedisRepository) Set(arg0 context.Context, arg1 string, arg2 int, arg3 *domain.Link) error {
+func (m *MockShortenerRedisRepository) Set(arg0 context.Context, arg1 string, arg2 *domain.Link, arg3 int) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Set", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(error)

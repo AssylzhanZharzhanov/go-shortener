@@ -12,6 +12,6 @@ type ShortenerRepository interface {
 // ShortenerRedisRepository - provides access to a redis storage
 type ShortenerRedisRepository interface {
 	Get(ctx context.Context, key string) (*Link, error)
-	Set(ctx context.Context, key string, seconds int, resident *Link) error
+	Set(ctx context.Context, key string, value *Link, seconds int) error
 	Delete(ctx context.Context, key string) error
 }

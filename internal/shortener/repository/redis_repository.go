@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
+	"time"
 
 	"github.com/AssylzhanZharzhanov/go-shortener/internal/shortener/domain"
 
@@ -19,17 +21,36 @@ func NewRedisRepository(client *redis.Client) domain.ShortenerRedisRepository {
 	}
 }
 
-func (r redisRepository) Get(ctx context.Context, key string) (*domain.Link, error) {
-	//TODO implement me
-	panic("implement me")
+func (r *redisRepository) Set(ctx context.Context, key string, value *domain.Link, seconds int) error {
+	bytes, err := json.Marshal(value)
+	if err != nil {
+		return err
+	}
+
+	if err = r.client.Set(ctx, key, bytes, time.Second*time.Duration(seconds)).Err(); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (r redisRepository) Set(ctx context.Context, key string, seconds int, resident *domain.Link) error {
-	//TODO implement me
-	panic("implement me")
+func (r *redisRepository) Get(ctx context.Context, key string) (*domain.Link, error) {
+
+	bytes, err := r.client.Get(ctx, key).Bytes()
+	if err != nil {
+		return nil, err
+	}
+
+	value := &domain.Link{}
+	if err = json.Unmarshal(bytes, value); err != nil {
+		return nil, err
+	}
+
+	return value, nil
 }
 
-func (r redisRepository) Delete(ctx context.Context, key string) error {
-	//TODO implement me
-	panic("implement me")
+func (r *redisRepository) Delete(ctx context.Context, key string) error {
+	if err := r.client.Del(ctx, key).Err(); err != nil {
+		return err
+	}
+	return nil
 }
