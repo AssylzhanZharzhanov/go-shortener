@@ -6,9 +6,6 @@ import (
 	"net/http"
 	"time"
 
-	authEndpoint "github.com/AssylzhanZharzhanov/go-shortener/internal/auth/delivery/http"
-	authRepo "github.com/AssylzhanZharzhanov/go-shortener/internal/auth/repository"
-	authService "github.com/AssylzhanZharzhanov/go-shortener/internal/auth/service"
 	"github.com/AssylzhanZharzhanov/go-shortener/internal/helpers"
 	shortenerEndpoint "github.com/AssylzhanZharzhanov/go-shortener/internal/shortener/delivery/http"
 	"github.com/AssylzhanZharzhanov/go-shortener/internal/shortener/repository"
@@ -45,18 +42,15 @@ func (a *App) Run() error {
 	redisClient := redis.NewRedisClient(a.cfg)
 
 	//repository layer
-	authorizationRepository := authRepo.NewAuthRepository(postgresDB)
 	shortenerRepository := repository.NewShortenerRepository(postgresDB)
 	shortenerRedisRepository := repository.NewRedisRepository(redisClient)
 
 	//service layer
-	authorizationService := authService.NewAuthService(authorizationRepository)
 	shortenerService := service.NewShortenerService(shortenerRepository, shortenerRedisRepository)
 
 	//handler layer
 	router := gin.New()
 	api := router.Group("/api")
-	authEndpoint.RegisterEndpoints(api, authorizationService)
 	shortenerEndpoint.RegisterEndpoints(api, shortenerService)
 
 	a.server = &http.Server{

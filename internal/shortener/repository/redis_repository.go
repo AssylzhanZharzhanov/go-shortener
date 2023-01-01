@@ -34,7 +34,6 @@ func (r *redisRepository) Set(ctx context.Context, key string, value *domain.Lin
 }
 
 func (r *redisRepository) Get(ctx context.Context, key string) (*domain.Link, error) {
-
 	bytes, err := r.client.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil, err
