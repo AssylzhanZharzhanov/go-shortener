@@ -3,7 +3,7 @@ package log
 import (
 	"os"
 
-	"gitlab.com/zharzhanov/mercury/internal/helpers"
+	"github.com/AssylzhanZharzhanov/go-shortener/internal/helpers"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

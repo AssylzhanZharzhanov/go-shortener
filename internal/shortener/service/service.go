@@ -43,7 +43,7 @@ func (s *service) CreateShortenURL(ctx context.Context, link *domain.Link) (*dom
 		}
 	}
 
-	link.Hash = shortUrl
+	link.ShortURL = shortUrl
 	return s.repository.Create(link)
 }
 

@@ -9,7 +9,7 @@ type LinkID int64
 type Link struct {
 	ID          LinkID `json:"id" gorm:"column:id"`
 	OriginalURL string `json:"original_url" gorm:"column:original_url"`
-	Hash        string `json:"hash" gorm:"column:hash"`
+	ShortURL    string `json:"short_url" gorm:"column:short_url"`
 	CreatedAt   int64  `json:"created_at" gorm:"not null;autoCreateTime;column:created_at"`
 }
 
